@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chat Room</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <img src="{{ url_for('static', filename='logo.svg') }}" alt="Logo">
+    <span>Media Website</span>
+    <button id="theme-toggle">🌙 Dark Mode</button>
+  </header>
+
+  <nav>
+    <a href="{{ url_for('dashboard') }}"><i class="fas fa-home"></i> Dashboard</a>
+    <a href="{{ url_for('chat') }}" class="active"><i class="fas fa-comments"></i> Chat</a>
+    {% if session.get('is_admin') %}
+    <a href="{{ url_for('admin') }}"><i class="fas fa-cog"></i> Admin</a>
+    {% endif %}
+    <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+
+  </nav>
+
+  <div class="container">
+    <h2>Chat Room</h2>
+    <form method="POST">
+      <input type="text" name="message" placeholder="Type your message" required>
+      <input type="submit" value="Send">
+    </form>
+    <h3>Messages:</h3>
+    <ul>
+      {% for message in messages %}
+        <li class="message">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <footer>
+    &copy; {{ current_year }} | Shadrack Machoni. All rights reserved.
+  </footer>
+
+  <script>
+    const toggleButton = document.getElementById('theme-toggle');
+    const body = document.body;
+    if (localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark-mode');
+      toggleButton.textContent = '☀ Light Mode';
+    }
+    toggleButton.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+        toggleButton.textContent = '☀ Light Mode';
+      } else {
+        localStorage.setItem('theme', 'light');
+        toggleButton.textContent = '🌙 Dark Mode';
+      }
+    });
+  </script>
+</body>
+</html>
